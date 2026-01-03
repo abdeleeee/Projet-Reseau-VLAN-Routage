@@ -4,43 +4,27 @@
 Ce projet a pour objectif de concevoir et simuler une infrastructure réseau d’entreprise multisites
 à l’aide de Cisco Packet Tracer.
 
-Le projet met en œuvre :
-- la segmentation réseau (VLAN),
-- l’agrégation de liens (EtherChannel),
-- le routage inter-VLAN (Router on a Stick),
-- le routage statique inter-site.
+Le projet met en œuvre les technologies suivantes :
+- segmentation logique avec **VLANs**
+- agrégation de liens avec **EtherChannel**
+- routage inter-VLAN avec **Router-on-a-Stick**
+- routage statique entre sites distants
 
 ---
 
-## 🎯 Objectifs
-- Concevoir l’architecture réseau
+## 🎯 Objectifs pédagogiques
+- Concevoir une architecture réseau efficace
 - Configurer VLANs et trunking
-- Mettre en place EtherChannel
+- Implémenter EtherChannel (LACP)
 - Configurer le routage inter-VLAN
-- Valider la connectivité avec des tests
+- Valider la connectivité à l’aide de tests
 
 ---
 
-## 🧩 Contenu du dépôt
-- `PacketTracer/` : fichier Cisco Packet Tracer `.pkt`
-- `Captures/` : captures d’écran (topologie, pings, traceroute)
-- `Rapport/` : rapport final au format PDF
+## 📁 Contenu du dépôt
+Voici l’organisation du projet :
 
----
-
-## 🛠️ Technologies utilisées
-- Cisco Packet Tracer
-- VLAN & Trunking
-- EtherChannel (LACP)
-- Router-on-a-Stick
-- Routage statique
-- GitHub
-
----
-
-## 📁 Organisation
 Projet-Reseau-VLAN-Routage-Statique/
-│
 ├── README.md
 ├── PacketTracer/
 │ └── Projet_Reseau_Multisite.pkt
@@ -51,21 +35,35 @@ Projet-Reseau-VLAN-Routage-Statique/
 │ └── Show_IP_Route.png
 └── Rapport/
 └── Nouveau_Rapport_Projet_Reseau_VLAN_Routage.pdf
----
 
-## 📌 Tests réalisés
-- Ping inter-VLAN réussi
-- Traceroute entre sites
-- Vérification des tables de routage
-- Vérification de la connectivité globale
+yaml
+Copier le code
 
 ---
 
-## 👨‍🎓 Réalisé par
-**El azzouzi Abdelmoughite**  
-Encadrant : Prof. Azeddine KHIAT  
-Année universitaire : 2025/2026
+## 🧠 Technologies utilisées
+- **Cisco Packet Tracer**
+- VLAN & Trunking
+- EtherChannel (LACP)
+- Router-on-a-Stick
+- Routage statique WAN
+- GitHub pour versionner le projet
 
-## 🔗 Lien GitHub du projet
+---
+
+## 🧪 Tests réalisés
+Pour valider la bonne configuration :
+- **Ping inter-VLAN** (VLAN 10 ↔ VLAN 20)
+- **Traceroute** entre sites WAN
+- Vérification des tables de routage (`show ip route`)
+- Tests de connectivité globale
+
+---
+
+## 👨‍🎓 Informations du projet
+**Auteur :** El azzouzi Abdelmoughite  
+**Encadrant :** Prof. Azeddine KHIAT  
+**Année universitaire :** 2025/2026  
+
+## 🔗 Lien du dépôt GitHub
 https://github.com/abdeleeee/Projet-Reseau-VLAN-Routage
-
