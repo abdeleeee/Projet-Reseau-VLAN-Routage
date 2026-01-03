@@ -1,6 +1,6 @@
 # 🌐 Projet Réseau – VLAN, EtherChannel & Routage Statique
 
-![Cisco]([https://img.shields.io/badge/Cisco-Packet%20Tracer-blue](https://www.netacad.com/profile?&tab=transcript))
+![Cisco]((https://www.netacad.com/profile?&tab=transcript))
 ![Networking](https://img.shields.io/badge/Networking-VLAN%20%7C%20Routing-green)
 ![Status](https://img.shields.io/badge/Status-Completed-success)
 ![GitHub](https://img.shields.io/badge/GitHub-Project-black)
