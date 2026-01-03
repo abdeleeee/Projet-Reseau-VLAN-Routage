@@ -41,8 +41,7 @@ Les VLANs configurés au siège :
 > *(Image à ajouter dans le dossier `Captures/`)*
 
 
-yaml
-Copier le code
+
 
 ---
 
@@ -67,8 +66,7 @@ Les tests suivants ont été réalisés avec succès :
 📸 Exemples de captures :
 
 
-yaml
-Copier le code
+
 
 ---
 
@@ -86,8 +84,7 @@ Projet-Reseau-VLAN-Routage-Statique/
 └── Rapport/
 └── Nouveau_Rapport_Projet_Reseau_VLAN_Routage.pdf
 
-yaml
-Copier le code
+
 
 ---
 
