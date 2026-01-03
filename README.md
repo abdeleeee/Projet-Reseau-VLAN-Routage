@@ -39,3 +39,33 @@ Le projet met en œuvre :
 ---
 
 ## 📁 Organisation
+Projet-Reseau-VLAN-Routage-Statique/
+│
+├── README.md
+├── PacketTracer/
+│ └── Projet_Reseau_Multisite.pkt
+├── Captures/
+│ ├── Topologie.png
+│ ├── Ping_InterVLAN.png
+│ ├── Traceroute_WAN.png
+│ └── Show_IP_Route.png
+└── Rapport/
+└── Nouveau_Rapport_Projet_Reseau_VLAN_Routage.pdf
+---
+
+## 📌 Tests réalisés
+- Ping inter-VLAN réussi
+- Traceroute entre sites
+- Vérification des tables de routage
+- Vérification de la connectivité globale
+
+---
+
+## 👨‍🎓 Réalisé par
+**El azzouzi Abdelmoughite**  
+Encadrant : Prof. Azeddine KHIAT  
+Année universitaire : 2025/2026
+
+## 🔗 Lien GitHub du projet
+https://github.com/abdeleeee/Projet-Reseau-VLAN-Routage
+
