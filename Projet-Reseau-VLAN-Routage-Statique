@@ -1,0 +1,16 @@
+Projet-Reseau-VLAN-Routage-Statique/
+│
+├── README.md
+│
+├── PacketTracer/
+│   └── Projet_Reseau_Multisite.pkt
+│
+├── Captures/
+│   ├── Topologie.png
+│   ├── Ping_InterVLAN.png
+│   ├── Traceroute_WAN.png
+│   └── Show_IP_Route.png
+│
+├── Rapport/
+│   └── Nouveau_Rapport_Projet_Reseau_VLAN_Routage.pdf
+
