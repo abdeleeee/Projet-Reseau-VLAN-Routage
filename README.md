@@ -1,68 +1,168 @@
-# Configuration avancée : VLANs, EtherChannel (LACP) & Routage (Router-on-a-Stick) — Cisco Packet Tracer
+# Configuration Avancée — VLANs, EtherChannel (LACP) & Routage (Router-on-a-Stick) | Cisco Packet Tracer
 
-Ce dépôt contient une simulation **Packet Tracer** d’une infrastructure réseau de type PME, mettant en pratique :
-- la **segmentation** via **VLANs**,
-- la **mise en trunk** et la sécurisation des trunks (VLAN natif + VLANs autorisés),
-- l’agrégation de liens **EtherChannel** avec **LACP** (redondance + bande passante),
-- le **routage Inter-VLAN** (Router-on-a-Stick),
-- une **liaison WAN** et du **routage statique**.
-
-> Le rapport détaillé (topologie, plan d’adressage, commandes IOS, validation) est disponible ici : :contentReference[oaicite:0]{index=0}
-
----
-
-## 📌 Contexte & objectifs
-
-Le scénario simule une PME qui souhaite :
-- isoler ses départements pour des raisons de **sécurité** et de **performance** (VLANs),
-- fiabiliser l’interconnexion entre commutateurs (EtherChannel),
-- permettre une communication contrôlée entre VLANs (Inter-VLAN routing),
-- connecter le site principal à un réseau externe via un lien WAN et des routes statiques.
+**Projet Packet Tracer** simulant une infrastructure réseau de PME avec segmentation, redondance et routage :
+- **VLANs** (Direction / Technique / Commercial)
+- **Trunks 802.1Q** (VLAN natif + VLANs autorisés)
+- **EtherChannel (LACP)** entre commutateurs
+- **Routage Inter‑VLAN (Router‑on‑a‑Stick)** via sous‑interfaces
+- **Interconnexion WAN** + **routage statique**
+- **Tests & validation** (ping + commandes `show`)
 
 ---
 
-## 🧱 Topologie (résumé)
+## 1) Objectif du dépôt (valorisation)
 
-Équipements typiques (Packet Tracer) :
-- **SW1 & SW2** : 2 commutateurs (Cisco 2960 ou équivalent)
-- **R1** : routeur “gateway” (Cisco 2911 ou équivalent) pour le **router-on-a-stick**
-- **R2** : routeur distant simulant un site/WAN
-- **PCs** répartis sur plusieurs VLANs pour les tests
+Ce dépôt a été construit pour répondre à l’exigence **“Dépôt GitHub (obligatoire pour valorisation)”** :
 
-Un schéma de la topologie est présenté dans le rapport (section *Analyse de la Topologie*). :contentReference[oaicite:1]{index=1}
+✅ **README détaillé** (ce fichier)  
+✅ **Fichier Packet Tracer** (`.pkt`) + **exports de configuration** (`show running-config`)  
+✅ **Étapes d’installation / déploiement** (ouvrir / rejouer la config)  
+✅ **Ressources utiles** : schémas, captures, preuves de tests, diagrammes
 
 ---
 
-## 🗂️ VLANs & plan d’adressage
+## 2) Contenu recommandé du dépôt
+
+> Adapte les noms de fichiers si besoin, mais garde une structure claire.
+
+```
+.
+├── packet-tracer/
+│   └── packeeet1.pkt
+├── configs/
+│   ├── SW1_running-config.txt
+│   ├── SW2_running-config.txt
+│   ├── R1_running-config.txt
+│   └── R2_running-config.txt
+├── docs/
+│   └── rapport_cisco_packet_tracer.pdf
+├── resources/
+│   ├── topologie.png
+│   ├── plan_adressage.png
+│   └── captures_tests/
+│       ├── ping_intra_vlan10.png
+│       ├── ping_inter_vlan10_vers_vlan20.png
+│       ├── ping_wan_vers_R2.png
+│       ├── show_vlan_brief.png
+│       ├── show_interfaces_trunk.png
+│       ├── show_etherchannel_summary.png
+│       └── show_ip_route.png
+└── README.md
+```
+
+### Fichiers importants à inclure (minimum)
+- `packet-tracer/packeeet1.pkt` (obligatoire)
+- `docs/rapport_cisco_packet_tracer.pdf` (recommandé)
+- `configs/*.txt` (très recommandé pour prouver la configuration)
+- `resources/` (schémas et captures de validation)
+
+---
+
+## 3) Prérequis
+
+- **Cisco Packet Tracer** (version 8.x recommandée)
+- OS : Windows / Linux / macOS (selon support Packet Tracer)
+- Aucun accès Internet requis (projet local)
+
+---
+
+## 4) Installation / Déploiement
+
+### Option A — Déploiement rapide (ouvrir et tester)
+1. Cloner le dépôt :
+   ```bash
+   git clone <URL_DU_REPO>
+   cd <NOM_DU_REPO>
+   ```
+2. Ouvrir Cisco Packet Tracer
+3. Charger le fichier :
+   - `packet-tracer/packeeet1.pkt`
+4. Passer en mode **Realtime**
+5. Lancer les tests (section **9) Tests & validation**)
+
+### Option B — Rejouer la configuration depuis `configs/` (si tu fournis les configs)
+1. Ouvrir `packet-tracer/packeeet1.pkt`
+2. Pour chaque équipement (SW1, SW2, R1, R2) :
+   - Onglet **CLI**
+   - Coller le contenu du fichier correspondant dans `configs/`
+3. Vérifier avec :
+   - `show vlan brief`
+   - `show interfaces trunk`
+   - `show etherchannel summary`
+   - `show ip interface brief`
+   - `show ip route`
+
+---
+
+## 5) Topologie (résumé)
+
+### Équipements (typique PME)
+- **SW1** : Switch principal (VLANs / trunks / EtherChannel)
+- **SW2** : Switch secondaire (VLANs / trunks / EtherChannel)
+- **R1** : Routeur passerelle (Inter‑VLAN — Router‑on‑a‑Stick)
+- **R2** : Routeur distant (WAN)
+- **PCs** : postes clients répartis par VLAN
+
+📌 Ajoute dans `resources/topologie.png` une capture de ta topologie Packet Tracer.
+
+---
+
+## 6) Plan VLANs & adressage IP
+
+> Bonne pratique : **dernière IP utilisable (.254)** utilisée comme **passerelle** (gateway) des VLANs.
 
 | VLAN | Nom | Rôle | Réseau | Masque | Passerelle |
 |------|-----|------|--------|--------|------------|
-| 10 | DIRECTION | Département Direction | 192.168.10.0 | /24 | 192.168.10.254 |
-| 20 | TECHNIQUE | Département Technique | 192.168.20.0 | /24 | 192.168.20.254 |
-| 30 | COMMERCIAL | Département Commercial | 192.168.30.0 | /24 | 192.168.30.254 |
-| 99 | NATIF_MGMT | VLAN natif (trafic non tagué / contrôle) | N/A | N/A | N/A |
-| WAN | - | Liaison R1–R2 | 10.0.0.0 | /30 | - |
-
-> Convention : la **dernière IP utilisable (.254)** est réservée à la passerelle des VLANs.
+| 10 | DIRECTION | Département Direction | 192.168.10.0 | 255.255.255.0 (/24) | 192.168.10.254 |
+| 20 | TECHNIQUE | Département Technique | 192.168.20.0 | 255.255.255.0 (/24) | 192.168.20.254 |
+| 30 | COMMERCIAL | Département Commercial | 192.168.30.0 | 255.255.255.0 (/24) | 192.168.30.254 |
+| 99 | NATIF_MGMT | VLAN natif (trafic non tagué / contrôle) | N/A (non routé) | N/A | N/A |
+| WAN | - | Liaison R1–R2 | 10.0.0.0 | 255.255.255.252 (/30) | N/A |
 
 ---
 
-## ✅ Technologies implémentées
+## 7) Fonctionnalités techniques mises en œuvre
 
-- **VLANs** (création, nommage, ports access)
-- **Trunk 802.1Q** (VLAN natif 99 + liste VLANs autorisés)
-- **EtherChannel (LACP)** entre SW1 et SW2
-- **Router-on-a-Stick** sur R1 (sous-interfaces dot1Q)
-- **Routage statique** entre R1 et R2 (WAN /30)
+### 7.1 VLANs (segmentation)
+- Création VLAN 10 / 20 / 30 / 99
+- Nommage des VLANs
+- Ports “access” affectés aux VLANs
+
+### 7.2 Trunks sécurisés
+- Trunks entre SW1 ↔ R1 et SW1 ↔ SW2 (via EtherChannel)
+- **VLAN natif explicite** : VLAN 99
+- **VLANs autorisés limités** : `10,20,30,99`
+
+### 7.3 EtherChannel (LACP)
+- Agrégation de 2 liens physiques (ex: Fa0/23-24) en un **Port‑Channel**
+- Mode LACP **active**
+- Trunk au niveau du Port‑Channel
+
+### 7.4 Router‑on‑a‑Stick (Inter‑VLAN)
+- Sous‑interfaces sur R1 : `G0/0.10`, `G0/0.20`, `G0/0.30`, `G0/0.99 (native)`
+- Passerelles : `.254` pour chaque VLAN
+
+### 7.5 WAN + Routage statique
+- Lien série R1 ↔ R2 : `10.0.0.0/30`
+- Routes statiques sur R1 et R2
+- Exemple de réseau distant derrière R2 : `172.16.0.0/16` (si utilisé dans ton scénario)
 
 ---
 
-## ⚙️ Configuration (extraits)
+## 8) Configuration IOS — “Tout en un” (templates copiables)
 
-### 1) Création des VLANs (SW1 & SW2)
+> ⚠️ Les numéros de ports peuvent varier selon ta maquette `.pkt`.  
+> Adapte **uniquement** les interfaces (Fa/Gi/Se) si ton câblage est différent, le reste reste identique.
+
+---
+
+### 8.1 Configuration SW1 (Switch principal)
+
 ```cisco
 enable
 configure terminal
+
+! --- VLANs ---
 vlan 10
  name DIRECTION
 vlan 20
@@ -71,41 +171,32 @@ vlan 30
  name COMMERCIAL
 vlan 99
  name NATIF_MGMT
-end
+exit
 
-show vlan brief
-2) Ports access (exemple SW1)
-cisco
-Copier le code
-configure terminal
+! --- Ports ACCESS (exemples) ---
 interface fastEthernet0/1
+ description PC_VLAN10
  switchport mode access
  switchport access vlan 10
  spanning-tree portfast
 exit
 
 interface fastEthernet0/2
+ description PC_VLAN20
  switchport mode access
  switchport access vlan 20
  spanning-tree portfast
 exit
-3) Trunk vers le routeur (SW1 → R1)
-cisco
-Copier le code
-configure terminal
+
+! --- TRUNK vers le routeur R1 (ex: Gi0/1) ---
 interface gigabitEthernet0/1
  description *** Lien vers Routeur R1 ***
  switchport mode trunk
  switchport trunk native vlan 99
  switchport trunk allowed vlan 10,20,30,99
-end
+exit
 
-show interfaces trunk
-4) EtherChannel (LACP) entre SW1 et SW2
-Exemple : Fa0/23 et Fa0/24 agrégés en Port-Channel 1.
-cisco
-Copier le code
-configure terminal
+! --- EtherChannel LACP vers SW2 (ex: Fa0/23-24 -> Port-Channel 1) ---
 interface range fastEthernet0/23 - 24
  description *** EtherChannel vers SW2 ***
  switchport mode trunk
@@ -114,18 +205,96 @@ interface range fastEthernet0/23 - 24
  channel-group 1 mode active
 exit
 
-show etherchannel 1 summary
-La même configuration est à appliquer côté SW2 sur les ports correspondants.
-🧭 Routage (R1 & R2)
-1) Router-on-a-Stick (R1)
-cisco
-Copier le code
+interface port-channel 1
+ description *** Lien logique LACP vers SW2 ***
+ switchport mode trunk
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+exit
+
+end
+write memory
+
+! --- Vérification ---
+show vlan brief
+show interfaces trunk
+show etherchannel summary
+```
+
+---
+
+### 8.2 Configuration SW2 (Switch secondaire)
+
+```cisco
 enable
 configure terminal
+
+! --- VLANs (identiques à SW1) ---
+vlan 10
+ name DIRECTION
+vlan 20
+ name TECHNIQUE
+vlan 30
+ name COMMERCIAL
+vlan 99
+ name NATIF_MGMT
+exit
+
+! --- Ports ACCESS (exemples, adapte selon tes PCs) ---
+interface fastEthernet0/1
+ description PC_VLAN30
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+exit
+
+interface fastEthernet0/2
+ description PC_VLAN20
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+exit
+
+! --- EtherChannel LACP vers SW1 (ports correspondants : Fa0/23-24) ---
+interface range fastEthernet0/23 - 24
+ description *** EtherChannel vers SW1 ***
+ switchport mode trunk
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ channel-group 1 mode active
+exit
+
+interface port-channel 1
+ description *** Lien logique LACP vers SW1 ***
+ switchport mode trunk
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+exit
+
+end
+write memory
+
+! --- Vérification ---
+show vlan brief
+show interfaces trunk
+show etherchannel summary
+```
+
+---
+
+### 8.3 Configuration R1 (Routeur gateway — Router-on-a-Stick + WAN)
+
+```cisco
+enable
+configure terminal
+
+! --- Interface physique côté LAN (trunk vers SW1) ---
 interface gigabitEthernet0/0
+ description *** Trunk vers SW1 ***
  no shutdown
 exit
 
+! --- Sous-interfaces (Inter-VLAN routing) ---
 interface gigabitEthernet0/0.10
  description *** Gateway VLAN 10 (DIRECTION) ***
  encapsulation dot1Q 10
@@ -147,14 +316,9 @@ exit
 interface gigabitEthernet0/0.99
  description *** VLAN Natif ***
  encapsulation dot1Q 99 native
-end
+exit
 
-show ip interface brief
-2) WAN /30 + routes statiques (R1 ↔ R2)
-R1
-cisco
-Copier le code
-configure terminal
+! --- WAN vers R2 (série /30) ---
 interface serial0/0/0
  description *** Lien WAN vers R2 ***
  ip address 10.0.0.1 255.255.255.252
@@ -162,76 +326,183 @@ interface serial0/0/0
  no shutdown
 exit
 
+! --- Routage statique (exemple réseau distant derrière R2) ---
 ip route 172.16.0.0 255.255.0.0 10.0.0.2
-end
 
+end
+write memory
+
+! --- Vérification ---
+show ip interface brief
 show ip route
-R2
-cisco
-Copier le code
+```
+
+---
+
+### 8.4 Configuration R2 (Routeur distant — WAN + routes vers VLANs)
+
+```cisco
+enable
 configure terminal
+
+! --- WAN vers R1 ---
 interface serial0/0/0
+ description *** Lien WAN vers R1 ***
  ip address 10.0.0.2 255.255.255.252
  no shutdown
 exit
 
+! --- Routes statiques vers les VLANs du site principal ---
 ip route 192.168.10.0 255.255.255.0 10.0.0.1
 ip route 192.168.20.0 255.255.255.0 10.0.0.1
 ip route 192.168.30.0 255.255.255.0 10.0.0.1
-end
 
-show ip route
-🧪 Tests & validation
-Depuis les PCs (commande ping) :
-Intra-VLAN
-Objectif : deux PCs du même VLAN communiquent (niveau 2).
-Exemple : PC VLAN10 (192.168.10.10) -> ping 192.168.10.11
-Inter-VLAN
-Objectif : valider le routage via R1.
-Exemple : PC VLAN10 -> ping PC VLAN20 (192.168.20.10)
-Note : le premier ping peut échouer à cause de l’ARP (timeout initial).
-WAN
-Objectif : valider les routes statiques via la liaison R1–R2.
-Exemple : PC VLAN10 -> ping 10.0.0.2
-Commandes de vérification utiles :
-cisco
-Copier le code
-show vlan brief
-show interfaces trunk
-show etherchannel summary
+end
+write memory
+
+! --- Vérification ---
 show ip interface brief
 show ip route
-🛠️ Dépannage rapide
-Pas d’Inter-VLAN ?
-Vérifier trunk SW1↔R1 (show interfaces trunk)
-Vérifier encapsulation dot1Q et les IP des sous-interfaces sur R1
-Vérifier que les VLANs sont bien autorisés sur le trunk (allowed vlan)
-EtherChannel down / “suspended” ?
-Vérifier que les ports des deux côtés ont la même config (mode trunk, native, allowed)
-Vérifier LACP : show etherchannel summary
-WAN KO ?
-Vérifier no shutdown sur les interfaces série
-Vérifier le clock rate côté DCE
-Vérifier les routes statiques et le next-hop
-📦 Contenu du dépôt (suggestion)
-graphql
-Copier le code
-.
-├── packeeet1.pkt               # Fichier Packet Tracer (à ajouter)
-├── docs/
-│   └── rapport.pdf             # Rapport du projet
-└── README.md
-👤 Auteur
-EL AZZOUZI Abdelmoghit
-Année universitaire : 2025/2026
-Encadrant : Prof. Azeddine KHIAT
-(Détails dans le rapport) 
-2007800675519225856_rapport_cis…
+```
 
-📄 Licence
-Projet à but pédagogique (Cisco Packet Tracer).
-Ajoutez une licence (MIT / Apache-2.0 / etc.) selon vos besoins.
-bash
-Copier le code
+---
 
-Si tu me donnes le nom exact du fichier `.pkt` (ou l’arborescence de ton repo), je peux aussi adapter la section **“Contenu du dépôt”** et ajouter des captures/consignes ultra précises pour reproduire les tests dans Packet Tracer.
+## 9) Tests & validation (à documenter avec captures)
+
+> Objectif : prouver que la segmentation, l’EtherChannel, le routage Inter‑VLAN et le WAN fonctionnent.
+
+### Test 1 — Connectivité Intra‑VLAN
+**But :** deux machines dans le même VLAN communiquent (niveau 2, sans passer par le routeur).  
+**Exemple :**
+- PC VLAN10 (192.168.10.10) → `ping 192.168.10.11`
+
+✅ Attendu : réponses OK.
+
+📸 Capture à fournir :
+- `resources/captures_tests/ping_intra_vlan10.png`
+
+---
+
+### Test 2 — Connectivité Inter‑VLAN
+**But :** valider le routage via R1 (Router-on-a-Stick).  
+**Exemple :**
+- PC VLAN10 (192.168.10.10) → `ping 192.168.20.10` (PC VLAN20)
+
+✅ Attendu : réponses OK (le trafic transite par R1)  
+ℹ️ Le **premier ping peut échouer** (temps ARP).
+
+📸 Capture à fournir :
+- `resources/captures_tests/ping_inter_vlan10_vers_vlan20.png`
+
+---
+
+### Test 3 — Connectivité WAN
+**But :** valider les routes statiques et la liaison série R1–R2.  
+**Exemple :**
+- PC VLAN10 → `ping 10.0.0.2` (interface série de R2)
+
+✅ Attendu : réponses OK.
+
+📸 Capture à fournir :
+- `resources/captures_tests/ping_wan_vers_R2.png`
+
+---
+
+### Vérifications “preuves” (commandes show)
+À exécuter et capturer :
+
+- VLANs :
+  ```cisco
+  show vlan brief
+  ```
+- Trunks :
+  ```cisco
+  show interfaces trunk
+  ```
+- EtherChannel :
+  ```cisco
+  show etherchannel summary
+  ```
+- Interfaces & routage :
+  ```cisco
+  show ip interface brief
+  show ip route
+  ```
+
+📸 Captures à fournir :
+- `show_vlan_brief.png`
+- `show_interfaces_trunk.png`
+- `show_etherchannel_summary.png`
+- `show_ip_route.png`
+
+---
+
+## 10) Dépannage rapide
+
+### Problème : Inter‑VLAN ne marche pas
+- Vérifier trunk SW1 ↔ R1 :
+  - VLAN natif **99**
+  - VLANs autorisés : **10,20,30,99**
+- Vérifier sous‑interfaces sur R1 :
+  - `encapsulation dot1Q <VLAN>`
+  - IP passerelles `.254`
+- Vérifier passerelle sur les PCs :
+  - VLAN10 → 192.168.10.254
+  - VLAN20 → 192.168.20.254
+  - VLAN30 → 192.168.30.254
+
+### Problème : EtherChannel “down / suspended”
+- Les ports agrégés doivent avoir la **même config** des deux côtés (trunk, native, allowed)
+- Vérifier LACP :
+  - `show etherchannel summary`
+
+### Problème : WAN KO
+- Vérifier `no shutdown` sur les interfaces série
+- Vérifier **/30** et IP : `10.0.0.1` ↔ `10.0.0.2`
+- Vérifier `clock rate` côté **DCE**
+- Vérifier les routes statiques (`show ip route`)
+
+---
+
+## 11) Comment générer les fichiers `configs/*.txt` (preuve GitHub)
+
+Sur chaque équipement :
+1. CLI → taper :
+   ```cisco
+   show running-config
+   ```
+2. Copier/coller tout le résultat dans un fichier texte :
+   - `configs/SW1_running-config.txt`
+   - `configs/SW2_running-config.txt`
+   - `configs/R1_running-config.txt`
+   - `configs/R2_running-config.txt`
+
+> Bonus : ajoute aussi `show vlan brief`, `show interfaces trunk`, etc. dans un fichier `verification.txt` si tu veux.
+
+---
+
+## 12) Auteur & infos
+
+- **Projet réalisé par :** EL AZZOUZI Abdelmoghit  
+- **Filière :** Cycle ingénieur en informatique  
+- **Encadré par :** Prof. Azeddine KHIAT  
+- **Année universitaire :** 2025/2026  
+
+---
+
+## 13) Licence
+
+Projet à but pédagogique (simulation Cisco Packet Tracer).  
+Ajoute une licence si nécessaire (MIT / Apache‑2.0 / autre).
+
+---
+
+## 14) Checklist avant de rendre (très important)
+
+- [ ] `.pkt` présent dans `packet-tracer/`
+- [ ] README complet (ce fichier)
+- [ ] `docs/rapport_cisco_packet_tracer.pdf` ajouté
+- [ ] `configs/*.txt` exportés (`show running-config`)
+- [ ] `resources/` contient schéma topologie + captures de tests + captures des commandes `show`
+- [ ] Tests ping OK (intra‑VLAN / inter‑VLAN / WAN)
+- [ ] Dernier commit propre + push sur GitHub
